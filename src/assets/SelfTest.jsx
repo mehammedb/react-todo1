@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const SelfTest = () => {
   const [inputValue, setInputValue] = useState("");
@@ -21,7 +23,7 @@ const SelfTest = () => {
         <button
           className="bg-slate-300 text-center text-base px-4 py-1.5 rounded-md font-semibold"
           onClick={() => {
-            setPosts([inputValue, ...posts]);
+            setPosts([{ text: inputValue, isTicked: false }, ...posts]);
             setInputValue("");
           }}
         >
@@ -33,8 +35,34 @@ const SelfTest = () => {
         <div className="bg-slate-600 flex-1 rounded-t-3xl px-3 py-8">
           <ul className="space-y-1">
             {posts.map((post, i) => (
-              <li className="bg-yellow-100" key={i}>
-                {post}
+              <li
+                className="bg-yellow-100 flex justify-between items-center p-2 rounded-md"
+                key={i}
+              >
+                <div className="flex space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={post.isTicked}
+                    onChange={() => {
+                      const newposts = posts.map((p, indx) =>
+                        indx === i ? { ...p, isTicked: !p.isTicked } : p
+                      );
+                      setPosts(newposts);
+                    }}
+                  />
+                  <span className={`${post.isTicked ? "line-through" : ""}`}>
+                    {post.text}
+                  </span>
+                </div>
+                <div className="flex space-x-2">
+                  <FaEdit />
+                  <MdDelete
+                    onClick={() => {
+                      const dltPost = posts.filter((_, index) => i !== index);
+                      setPosts(dltPost);
+                    }}
+                  />
+                </div>
               </li>
             ))}
           </ul>
