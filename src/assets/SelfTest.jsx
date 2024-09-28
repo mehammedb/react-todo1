@@ -1,13 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Editform from "../components/Editform";
 
 const SelfTest = () => {
+  // const localPosts = localStorage.getItem("post")
+  //   ? JSON.parse(localStorage.getItem("post"))
+  //   : [];
+  // localPosts will be uncomment if strictmode is enabled
   const [inputValue, setInputValue] = useState("");
   const [posts, setPosts] = useState([]);
 
+  useEffect(() => {
+    const savedPost = localStorage.getItem("post");
+    if (savedPost) setPosts(JSON.parse(savedPost));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("post", JSON.stringify(posts));
+  }, [posts]);
+
   const addPost = () => {
+    if (inputValue.trim() === "") {
+      alert("Provide valid text please?");
+      return;
+    }
     setPosts([
       { id: Date.now(), text: inputValue, isTicked: false, isEditing: false },
       ...posts,
